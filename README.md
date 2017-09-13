@@ -11,8 +11,7 @@ Either put music in the "music" folder in script root, or create a file called "
 
 Python Requirements can be grabbed by either running the requirements file for your platform, or, typing
 
-```pip install -r Requirements.txt
-```
+pip install -r Requirements.txt
 
 #### Download FFMPEG Manually
 https://ffmpeg.zeranoe.com/builds/

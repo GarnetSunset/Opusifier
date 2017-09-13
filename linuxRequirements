@@ -1,2 +1,1 @@
 sudo apt-get --assume-yes install ffmpeg
-pip install --quiet -r Requirements.txt

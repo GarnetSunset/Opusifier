@@ -1,29 +1,67 @@
 from shutil import copyfile
+import itertools
 import os
 import re
 import sys
+import threading
+import time
+
+def loading():
+    for s in itertools.cycle(['|', '/', '-', '\\']):
+        if done:
+            break
+        sys.stdout.write('\rloading ' + s)
+        sys.stdout.flush()
+        time.sleep(0.1)
+
+def options(option):
+    global purge
+    global rmFile
+    if(option == "p"):
+        purge = True
+    if(option == "r"):
+        rmFile = True
 
 def osVersion(owd):
+    global ffBin
     if os.name == 'nt':
-        ffBin = owd+"/ffmpeg/ffmpeg-latest-win64-static/bin/ffmpeg.exe"
+        try:
+            os.system('ffmpeg')
+            os.system('cls')
+        except:
+            ffBin = owd+"/ffmpeg/ffmpeg-latest-win64-static/bin/ffmpeg.exe"
+        else:
+            ffBin = "ffmpeg"
     else:
         try:
             os.system('ffmpeg')
+            os.system('clear')
         except:
             breaker = True
         else:
             ffBin = "ffmpeg"
 
-def options(option):
-    if(option == "-p"):
-        purge = True
-    if(option == "-r"):
-        rmFile = True
+def purge():
+    youSure = raw_input("Are you sure?\nType \"Yes\" if you're sure.")
+    if(youSure == "Yes"):
+        os.rmdir(musicDir)
+        os.makedirs(musicDir)
+        sys.exit()
+    else:
+        print("Continuing without Deletion")
+        sys.exit()
 
+afterSize = 0
+beforeSize = 0
+done = False
+ext = [".mp3", ".ogg", ".m4a"]
 owd = os.getcwd()
+purge = False
+rmFile = False
 
 if os.path.isfile("directory.ini"):
     musicDir = open('directory.ini').read()
+
 else:
     musicDir = owd + "/music"
     if not os.path.exists("music"):
@@ -33,16 +71,45 @@ osVersion(owd)
 
 if not os.path.exists("ffmpeg") and os.name == 'nt':
     print("Go get ffmpeg please. Or use the batch.")
-    break()
+    sys.exit()
 
 dragNDrop = ''.join(sys.argv[1:2])
 dragNDrop2 = ''.join(sys.argv[2:3])
 
-if dragNDrop == '-h':
-    print("Welcome to the Help Menu\n-h: Help\n-p: Purge Old Files\n-r: Remove Original Files After Use")
+if dragNDrop == 'h':
+    print("Welcome to the Help Menu\nh: Help\np: Purge Old Files\nr: Remove Original Files After Use")
+    raw_input("\nPress Enter to quit...")
+    sys.exit()
 
 if dragNDrop != '':
     options(dragNDrop)
 
 if dragNDrop2 != '':
     options(dragNDrop2)
+
+if dragNDrop != '':
+    if(purge == True):
+        purge()
+
+g = threading.Thread(target=loading)
+g.start()
+
+for dname, dirs, files in os.walk(musicDir):
+    for fname in files:
+        fpath = os.path.join(dname, fname)
+        if fname.endswith(tuple(ext)):
+            fpath.encode('utf-8')
+            stopPoint = fpath.rfind('.')
+            songName = fpath[:stopPoint]
+            beforeSize += os.path.getsize(fpath)
+            os.system(ffBin + " -loglevel panic -y -i \"" + fpath + "\" -acodec libopus -vbr on \"" + songName +".opus\"")
+            afterSize += os.path.getsize(songName + ".opus")
+            if dragNDrop != '':
+                if(rmFile == True):
+                    os.remove(fpath)
+
+afterSize = afterSize/1000000
+beforeSize = beforeSize/1000000
+
+print("All done! Your music library went from being " + str(beforeSize) + " MBs, to being " + str(afterSize) + " MBs, congrats!")
+raw_input("\nPress Enter to continue...")

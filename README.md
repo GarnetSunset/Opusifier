@@ -18,3 +18,7 @@ Python Requirements can be grabbed by either running the requirements file for y
 https://ffmpeg.zeranoe.com/builds/
 
 Extract to the directory of the script.
+
+#### Bugs
+
+Japanese Filenames Don't Work... Yet.

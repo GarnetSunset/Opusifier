@@ -55,6 +55,7 @@ afterSize = 0
 beforeSize = 0
 done = False
 ext = [".mp3", ".ogg", ".m4a"]
+noRepeat = 0
 owd = os.getcwd()
 purge = False
 rmFile = False
@@ -98,18 +99,26 @@ for dname, dirs, files in os.walk(musicDir):
     for fname in files:
         fpath = os.path.join(dname, fname)
         if fname.endswith(tuple(ext)):
-            fpath.encode('utf-8')
             stopPoint = fpath.rfind('.')
             songName = fpath[:stopPoint]
-            beforeSize += os.path.getsize(fpath)
             os.system(ffBin + " -loglevel panic -y -i \"" + fpath + "\" -acodec libopus -vbr on \"" + songName +".opus\"")
-            afterSize += os.path.getsize(songName + ".opus")
+            try:
+                beforeSize += os.path.getsize(fpath)
+                afterSize += os.path.getsize(songName + ".opus")
+            except:
+                if(noRepeat == 0):
+                    noRepeat = 1
             if dragNDrop != '':
                 if(rmFile == True):
-                    os.remove(fpath)
+                    try:
+                        os.remove(fpath)
+                    except:
+                        if(noRepeat == 0):
+                            print("Probably a Japanese file, it won't go through conversion.")
 
 afterSize = afterSize/1000000
 beforeSize = beforeSize/1000000
+done = True
 
-print("All done! Your music library went from being " + str(beforeSize) + " MBs, to being " + str(afterSize) + " MBs, congrats!")
+print("\nAll done! Your music library went from being " + str(beforeSize) + "MBs, to being " + str(afterSize) + "MBs, congrats!")
 raw_input("\nPress Enter to continue...")

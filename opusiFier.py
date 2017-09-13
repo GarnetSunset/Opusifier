@@ -1,7 +1,5 @@
-from shutil import copyfile
 import itertools
 import os
-import re
 import sys
 import threading
 import time

@@ -70,7 +70,7 @@ else:
 
 osVersion(owd)
 
-if not os.path.exists("ffmpeg") and os.name == 'nt':
+if not os.path.exists("ffmpeg") and os.name == 'nt' and ffBin != "ffmpeg":
     print("Go get ffmpeg please. Or use the batch.")
     sys.exit()
 

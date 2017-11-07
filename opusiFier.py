@@ -39,8 +39,8 @@ def osVersion(owd):
         else:
             ffBin = "ffmpeg"
 
-def purge():
-    youSure = raw_input("Are you sure?\nType \"Yes\" if you're sure.")
+def purger():
+    youSure = raw_input("Are you sure?\nType \"Yes\" if you're sure.> ")
     if(youSure == "Yes"):
         os.rmdir(musicDir)
         os.makedirs(musicDir)
@@ -52,7 +52,7 @@ def purge():
 afterSize = 0
 beforeSize = 0
 done = False
-ext = [".mp3", ".ogg", ".m4a"]
+ext = [".mp3", ".ogg", ".m4a", ".flac"]
 noRepeat = 0
 owd = os.getcwd()
 purge = False
@@ -88,7 +88,7 @@ if dragNDrop2 != '':
 
 if dragNDrop != '':
     if(purge == True):
-        purge()
+        purger()
 
 g = threading.Thread(target=loading)
 g.start()

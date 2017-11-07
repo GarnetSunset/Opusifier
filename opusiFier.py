@@ -1,5 +1,6 @@
 import itertools
 import os
+import shutil
 import sys
 import threading
 import time
@@ -42,7 +43,7 @@ def osVersion(owd):
 def purger():
     youSure = raw_input("Are you sure?\nType \"Yes\" if you're sure.> ")
     if(youSure == "Yes"):
-        os.rmdir(musicDir)
+        shutil.rmtree(musicDir)
         os.makedirs(musicDir)
         sys.exit()
     else:

@@ -107,6 +107,7 @@ for dname, dirs, files in os.walk(musicDir):
             except:
                 if(noRepeat == 0):
                     noRepeat = 1
+            os.rename(songName + ".opus",songName + ".ogg")
             if dragNDrop != '':
                 if(rmFile == True):
                     try:
